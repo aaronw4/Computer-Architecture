@@ -14,24 +14,25 @@ class CPU:
     def load(self):
         """Load a program into memory."""
 
+        if (len(sys.argv)) != 2:
+            print("remember to pass the second file name")
+            print("usage: python3 fileio.py <second_file_name.py>")
+            sys.exit()
+
         address = 0
 
-        # For now, we've just hardcoded a program:
-
-        program = [
-            # From print8.ls8
-            0b10000010, # LDI R0,8
-            0b00000000,
-            0b00001000,
-            0b01000111, # PRN R0
-            0b00000000,
-            0b00000001, # HLT
-        ]
-
-        for instruction in program:
-            self.ram[address] = instruction
-            address += 1
-
+        try:
+            with open(sys.argv[1]) as f:
+                for line in f:
+                    possible_number = line[:line.find('#')]
+                    if possible_number == '':
+                        continue
+                    instruction = int(possible_number, 2)
+                    self.ram[address] = instruction
+                    address += 1
+        except FileNotFoundError:
+            print(f'Error from {sys.argv[0]}: {sys.argv[1]} not found')
+            sys.exit()
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
@@ -70,8 +71,6 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        self.load()
-
         running = True
 
         while running:
@@ -87,6 +86,14 @@ class CPU:
                 index = self.ram[self.pc + 1]
                 print(self.reg[index])
                 self.pc += 1
+
+            elif command == 0b10100010:
+                reg_index_1 = self.ram[self.pc + 1]
+                reg_index_2 = self.ram[self.pc + 2]
+                first_value = self.reg[reg_index_1]
+                second_value = self.reg[reg_index_2]
+                self.reg[reg_index_1] = first_value * second_value
+                self.pc += 2
 
             elif command == 0b00000001:
                 running = False
