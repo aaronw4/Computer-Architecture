@@ -87,6 +87,14 @@ class CPU:
                 print(self.reg[index])
                 self.pc += 1
 
+            elif command == 0b10100010:
+                reg_index_1 = self.ram[self.pc + 1]
+                reg_index_2 = self.ram[self.pc + 2]
+                first_value = self.reg[reg_index_1]
+                second_value = self.reg[reg_index_2]
+                self.reg[reg_index_1] = first_value * second_value
+                self.pc += 2
+
             elif command == 0b00000001:
                 running = False
 
