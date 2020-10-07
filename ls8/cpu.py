@@ -73,22 +73,23 @@ class CPU:
     def run(self):
         """Run the CPU."""
         running = True
+        # Stack Pointer
         SP = self.reg[7]
 
         while running:
             command = self.ram[self.pc]
-
+            # LDI
             if command == 0b10000010:
                 index = self.ram[self.pc + 1]
                 value = self.ram[self.pc + 2]
                 self.reg[index] = value
                 self.pc += 2
-
+            # PRN
             elif command == 0b01000111:
                 index = self.ram[self.pc + 1]
                 print(self.reg[index])
                 self.pc += 1
-
+            # MUL
             elif command == 0b10100010:
                 reg_index_1 = self.ram[self.pc + 1]
                 reg_index_2 = self.ram[self.pc + 2]
@@ -96,21 +97,21 @@ class CPU:
                 second_value = self.reg[reg_index_2]
                 self.reg[reg_index_1] = first_value * second_value
                 self.pc += 2
-
+            # PUSH
             elif command == 0b01000101:
                 SP -= 1
                 reg_index_1 = self.ram[self.pc + 1]
                 value = self.reg[reg_index_1]
                 self.ram[SP] = value
                 self.pc += 1
-
+            # POP
             elif command == 0b01000110:
                 value = self.ram[SP]
                 reg_index_1 = self.ram[self.pc + 1]
                 self.reg[reg_index_1] = value
                 SP += 1
                 self.pc += 1
-
+            # HLT
             elif command == 0b00000001:
                 running = False
 
