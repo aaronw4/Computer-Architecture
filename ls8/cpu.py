@@ -98,16 +98,18 @@ class CPU:
                 self.pc += 2
 
             elif command == 0b01000101:
-                self.reg[7] -= 1
+                SP -= 1
                 reg_index_1 = self.ram[self.pc + 1]
                 value = self.reg[reg_index_1]
                 self.ram[SP] = value
+                self.pc += 1
 
             elif command == 0b01000110:
                 value = self.ram[SP]
                 reg_index_1 = self.ram[self.pc + 1]
                 self.reg[reg_index_1] = value
-                self.reg[7] += 1
+                SP += 1
+                self.pc += 1
 
             elif command == 0b00000001:
                 running = False
