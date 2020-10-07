@@ -10,6 +10,7 @@ class CPU:
         self.ram = [0] * 256
         self.pc = 0
         self.reg = [0] * 8
+        self.reg[7] = 0xF4
 
     def load(self):
         """Load a program into memory."""
@@ -72,6 +73,7 @@ class CPU:
     def run(self):
         """Run the CPU."""
         running = True
+        SP = self.reg[7]
 
         while running:
             command = self.ram[self.pc]
@@ -94,6 +96,18 @@ class CPU:
                 second_value = self.reg[reg_index_2]
                 self.reg[reg_index_1] = first_value * second_value
                 self.pc += 2
+
+            elif command == 0b01000101:
+                self.reg[7] -= 1
+                reg_index_1 = self.ram[self.pc + 1]
+                value = self.reg[reg_index_1]
+                self.ram[SP] = value
+
+            elif command == 0b01000110:
+                value = self.ram[SP]
+                reg_index_1 = self.ram[self.pc + 1]
+                self.reg[reg_index_1] = value
+                self.reg[7] += 1
 
             elif command == 0b00000001:
                 running = False
