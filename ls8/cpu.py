@@ -111,6 +111,19 @@ class CPU:
                 self.reg[reg_index_1] = value
                 SP += 1
                 self.pc += 1
+            # CALL
+            elif command == 0b01010000:
+                return_address = self.pc + 2
+                SP -= 1
+                self.ram[SP] = return_address
+                reg_index_1 = self.ram[self.pc + 1]
+                subroutine_address = self.reg[reg_index_1]
+                self.pc = subroutine_address
+            # RET
+            elif command == 0b00010001:
+                return_address = self.ram[SP]
+                self.pc = return_address
+                SP += 1
             # HLT
             elif command == 0b00000001:
                 running = False
