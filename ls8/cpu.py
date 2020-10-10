@@ -41,7 +41,27 @@ class CPU:
 
         if op == "ADD":
             self.reg[reg_a] += self.reg[reg_b]
-        #elif op == "SUB": etc
+        elif op == 'AND':
+            result = self.reg[reg_a] & self.reg[reg_b]
+            self.reg[reg_a] = result
+        elif op == 'OR':
+            result = self.reg[reg_a] | self.reg[reg_b]
+            self.reg[reg_a] = result
+        elif op == 'XOR':
+            result = self.reg[reg_a] ^ self.reg[reg_b]
+            self.reg[reg_a] = result
+        elif op == 'NOT':
+            result = self.reg[reg_a] == ~self.reg[reg_b]
+            self.reg[reg_a] = result
+        elif op == 'SHL':
+            result = self.reg[reg_a] << self.reg[reg_b]
+            self.reg[reg_a] = result
+        elif op == 'SHR':
+            result = self.reg[reg_a] >> self.reg[reg_b]
+            self.reg[reg_a] = result
+        elif op == 'MOD':
+            result = self.reg[reg_a] % self.reg[reg_b]
+            self.reg[reg_a] = result
         else:
             raise Exception("Unsupported ALU operation")
 
@@ -151,7 +171,7 @@ class CPU:
 
             # JEQ
             elif command == 0b01010101:
-                reg_index_1 =  self.ram[self.PC + 1]
+                reg_index_1 = self.ram[self.PC + 1]
                 address = self.reg[reg_index_1]
 
                 if self.FL == 0b00000001:
